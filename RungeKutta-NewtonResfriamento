@@ -1,0 +1,182 @@
+x0 = 0
+h = 0.75
+y0 = 29.4
+
+
+fxk1 = x0
+fyk1 = y0
+k1= -0.523* (fyk1-20)
+
+fxk2 = (x0+h/2)
+fyk2 = y0+((h*k1)/2)
+k2= -0.523* (fyk2-20)
+
+fxk3 = (x0+h/2)
+fyk3 = y0+((h*k2)/2)
+k3= -0.523* (fyk3-20)
+
+fxk4 = (x0+h/2)
+fyk4 = y0+(h*k3)
+k4= -0.523* (fyk4-20)
+
+print("fxk1:",fxk1, "\nfyk1:",fyk1)
+print("k1 =",k1,"\n")
+
+print("fxk2:",fxk2, "\nfyk2:",fyk2)
+print("k2 =",k2,"\n")
+
+print("fxk3:",fxk3, "\nfyk3:",fyk3)
+print("k3 =",k3,"\n")
+
+print("fxk4:",fxk4, "\nfyk4:",fyk4)
+print("k4 =",k4)
+
+y1 = y0+ ((h/6)*(k1+(2*k2)+(2*k3)+k4))
+
+print("\n\ny1 =",y1,"\n\n\n")
+
+#/////////////////////////////////////////////////
+x1 = x0+h
+
+
+fxk1 = x1
+fyk1 = y1
+k1= -0.523* (fyk1-20)
+
+fxk2 = (x1+h/2)
+fyk2 = y1+((h*k1)/2)
+k2= -0.523* (fyk2-20)
+
+fxk3 = (x1+h/2)
+fyk3 = y1+((h*k2)/2)
+k3= -0.523* (fyk3-20)
+
+fxk4 = (x1+h/2)
+fyk4 = y1+(h*k3)
+k4= -0.523* (fyk4-20)
+
+print("fxk1:",fxk1, "\nfyk1:",fyk1)
+print("k1 =",k1,"\n")
+
+print("fxk2:",fxk2, "\nfyk2:",fyk2)
+print("k2 =",k2,"\n")
+
+print("fxk3:",fxk3, "\nfyk3:",fyk3)
+print("k3 =",k3,"\n")
+
+print("fxk4:",fxk4, "\nfyk4:",fyk4)
+print("k4 =",k4)
+
+y2 = y1+ ((h/6)*(k1+(2*k2)+(2*k3)+k4))
+
+print("\n\ny2 =",y2,"\n\n\n")
+
+#/////////////////////////////////////////////////
+x2 = x1+h
+
+
+fxk1 = x2
+fyk1 = y2
+k1= -0.523* (fyk1-20)
+
+fxk2 = (x2+h/2)
+fyk2 = y2+((h*k1)/2)
+k2= -0.523* (fyk2-20)
+
+fxk3 = (x2+h/2)
+fyk3 = y2+((h*k2)/2)
+k3= -0.523* (fyk3-20)
+
+fxk4 = (x2+h/2)
+fyk4 = y2+(h*k3)
+k4= -0.523* (fyk4-20)
+
+print("fxk1:",fxk1, "\nfyk1:",fyk1)
+print("k1 =",k1,"\n")
+
+print("fxk2:",fxk2, "\nfyk2:",fyk2)
+print("k2 =",k2,"\n")
+
+print("fxk3:",fxk3, "\nfyk3:",fyk3)
+print("k3 =",k3,"\n")
+
+print("fxk4:",fxk4, "\nfyk4:",fyk4)
+print("k4 =",k4)
+
+y3 = y2+ ((h/6)*(k1+(2*k2)+(2*k3)+k4))
+
+print("\n\ny3 =",y3,"\n\n\n")
+
+#/////////////////////////////////////////////////
+
+x3 = x2+h
+
+
+fxk1 = x3
+fyk1 = y3
+k1= -0.523* (fyk1-20)
+
+fxk2 = (x3+h/2)
+fyk2 = y3+((h*k1)/2)
+k2= -0.523* (fyk2-20)
+
+fxk3 = (x3+h/2)
+fyk3 = y3+((h*k2)/2)
+k3= -0.523* (fyk3-20)
+
+fxk4 = (x3+h/2)
+fyk4 = y3+(h*k3)
+k4= -0.523* (fyk4-20)
+
+print("fxk1:",fxk1, "\nfyk1:",fyk1)
+print("k1 =",k1,"\n")
+
+print("fxk2:",fxk2, "\nfyk2:",fyk2)
+print("k2 =",k2,"\n")
+
+print("fxk3:",fxk3, "\nfyk3:",fyk3)
+print("k3 =",k3,"\n")
+
+print("fxk4:",fxk4, "\nfyk4:",fyk4)
+print("k4 =",k4)
+
+y4 = y3+ ((h/6)*(k1+(2*k2)+(2*k3)+k4))
+
+print("\n\ny4 =",y4,"\n\n\n")
+
+#/////////////////////////////////////////////////
+
+x4 = x3+h
+
+
+fxk1 = x4
+fyk1 = y4
+k1= -0.523* (fyk1-20)
+
+fxk2 = (x4+h/2)
+fyk2 = y4+((h*k1)/2)
+k2= -0.523* (fyk2-20)
+
+fxk3 = (x4+h/2)
+fyk3 = y4+((h*k2)/2)
+k3= -0.523* (fyk3-20)
+
+fxk4 = (x4+h/2)
+fyk4 = y4+(h*k3)
+k4= -0.523* (fyk4-20)
+
+print("fxk1:",fxk1, "\nfyk1:",fyk1)
+print("k1 =",k1,"\n")
+
+print("fxk2:",fxk2, "\nfyk2:",fyk2)
+print("k2 =",k2,"\n")
+
+print("fxk3:",fxk3, "\nfyk3:",fyk3)
+print("k3 =",k3,"\n")
+
+print("fxk4:",fxk4, "\nfyk4:",fyk4)
+print("k4 =",k4)
+
+y5 = y4+ ((h/6)*(k1+(2*k2)+(2*k3)+k4))
+
+print("\n\ny5 =",y5,"\n\n\n")
