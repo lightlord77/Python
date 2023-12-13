@@ -1,0 +1,58 @@
+x =float(input("digite o valor do x0: "))
+h = float(input("Digite o tamanho do pulo: "))
+h0 = float(input("Digite o valor inicial do pulo: "))
+hx = float(input("Digite o valor final do pulo: "))
+y = float(input("Digite o valor do y0: "))
+n=((hx-h0)/h) 
+t=0
+while (t<=n):
+  k1=0
+  k1x=0
+  k1y=0
+
+  k2=0
+  k2x=0
+  k2y=0
+
+  k3=0
+  k3x=0
+  k3y=0
+
+  k4=0
+  k4x=0
+  k4y=0
+
+  k1x=x
+  k1y=y
+  k1=-0.523* (k1y-20)
+
+  k2x=x+(h/2)
+  k2y=y+((h/2)*k1)
+  k2=-0.523* (k2y-20)
+
+  k3x=x+(h/2)
+  k3y=y+((h/2)*k2)
+  k3=-0.523* (k3y-20)
+
+  k4x=x+h
+  k4y=y+(h*k3)
+  k4=-0.523* (k4y-20)
+
+  print("k1x:",k1x, "\nk1y:",k1y)
+  print("k1 =",k1,"\n")
+
+  print("k2x:",k2x, "\nk2y:",k2y)
+  print("k2 =",k2,"\n")
+
+  print("k3x:",k3x, "\nk3y:",k3y)
+  print("k3 =",k3,"\n")
+
+  print("k4x:",k4x, "\nk4y:",k4y)
+  print("k4 =",k4,"\n")
+
+  t+=1
+  x=x+h
+  y=y+((h/6)*(k1+(2*k2)+(2*k3)+k4))
+
+  print(f"x{t} é {x}")
+  print(f"y{t} é {y}\n\n")
