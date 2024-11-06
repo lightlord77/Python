@@ -1,0 +1,108 @@
+import matplotlib.pyplot as plt
+import networkx as nx
+
+def recomendar_amigos_lista(lista_adj, usuario_id):
+    amigos_diretos = set(lista_adj[usuario_id])
+    recomendacoes = set()
+
+    # 2
+    for amigo in amigos_diretos:
+        # 3
+        for amigo_ in lista_adj[amigo]:
+            if amigo_ != usuario_id and amigo_ not in amigos_diretos:
+                recomendacoes.add(amigo_)
+
+    # 4. Converte o conjunto 'recomendacoes' em uma lista e retorna.
+    return list(recomendacoes)
+
+def desenhar_recomendacoes_lista(lista_adj, usuario_id, recomendacoes, nomes_usuarios):
+    """
+    Desenha o grafo com o usuário selecionado e suas recomendações de amizade.
+    Utiliza a biblioteca NetworkX para criação do grafo e Matplotlib para desenhar.
+    """
+    G = nx.Graph()  # Cria um grafo não direcionado.
+    cores_nomes = {}
+
+    # Adiciona arestas ao grafo usando os nomes dos usuários.
+    for i in range(len(lista_adj)):
+        for j in lista_adj[i]:  # Itera sobre cada amigo na lista de adjacência.
+            if i < j:  # Adiciona arestas apenas uma vez para evitar duplicação.
+                G.add_edge(nomes_usuarios[i], nomes_usuarios[j])  # Adiciona aresta.
+
+    # Define as cores dos nós baseando-se em nomes de usuários e recomendações.
+    for i in range(len(lista_adj)):
+        if i == usuario_id:
+            cores_nomes[nomes_usuarios[i]] = 'black'  # Cor do usuário selecionado.
+        elif i in recomendacoes:
+            cores_nomes[nomes_usuarios[i]] = 'black'  # Cor para recomendações.
+        else:
+            cores_nomes[nomes_usuarios[i]] = 'black'  # Cor para os outros nós.
+
+    # Calcula a posição dos nós para o layout do grafo.
+    pos = nx.spring_layout(G)  # Usa o layout de mola para distribuir os nós.
+    plt.figure(figsize=(6, 4))  # Define o tamanho da figura.
+
+    # Define o título do grafo.
+    nomes_recomendados = [nomes_usuarios[i] for i in recomendacoes]
+    Tit = f"Recomendações de amizade para {nomes_usuarios[usuario_id]}:\n"
+    Tit += ", ".join(nomes_recomendados) + "."
+    plt.title(Tit)
+
+    # Desenha o grafo com cores dos vértices em branco e peso de fonte em negrito.
+    nx.draw(G, pos, with_labels=True, node_color='white', font_weight='bold')
+
+    # Itera sobre cada item no dicionário "pos", que contém as posições dos nós no grafo.
+    for node, (x, y) in pos.items():
+        # Verifica se o nó atual é o usuário selecionado.
+        if node == nomes_usuarios[usuario_id]:
+            facecolor = '#90EE90'  # Define a cor de fundo como amarelo um pouco mais escuro.
+
+        # Se o nó não for o usuário selecionado, verifica se ele está na lista de recomendações.
+        elif node in [nomes_usuarios[i] for i in recomendacoes]:
+            facecolor = 'red'  # Define a cor de fundo como azul claro para recomendações.
+
+        # Se o nó não for o usuário nem uma recomendação, define a cor de fundo como branca.
+        else:
+            facecolor = 'white'
+
+        # Desenha o texto do nome do nó no grafo com as configurações de cor de fundo e texto.
+        plt.text(x, y, node, fontsize=12, ha='center', va='center',
+                 bbox=dict(facecolor=facecolor, edgecolor='black', boxstyle='round,pad=0.2'),
+                 color=cores_nomes[node])
+
+    # Exibe a figura.
+    plt.show()  # Mostra o grafo na tela.
+
+def criar_grafo_exemplo_lista():
+    # Lista de adjacência representando as conexões de amizade.
+    lista_adj = [
+        [1, 3],  # Ana -> Bruno, Daniel - 0
+        [0, 2, 4],  # Bruno -> Ana,Carla e Eduarda - 1
+        [1, 5],  # Carla -> Bruno e Fabio - 2
+        [0, 7],  # Daniel -> Ana e Henrique - 3
+        [1, 6, 9],  # Eduarda -> Bruno,Gabriela e Joao - 4
+        [2, 8],  # Fabio -> Carla e Isabela - 5
+        [4,7],  # Gabriela -> Eduarda e Henrique - 6
+        [3, 6],  # Henrique -> Daniel e Gabriela - 7
+        [5, 9],  # Isabela -> Fabio e João. - 8
+        [4, 8]  # João -> Eduarda e Isabela. - 9
+    ]
+    return lista_adj  # Retorna a lista de adjacência.
+
+# Execução do exemplo de uso.
+nomes_usuarios = ["Ana", "Bruno", "Carla", "Daniel", "Eduarda",
+                  "Fabio", "Gabriela", "Henrique", "Isabela", "João"]
+lista_adj = criar_grafo_exemplo_lista()  # Cria o grafo exemplo.
+
+# Solicita ao usuário para escolher um nome da lista.
+print("Usuários disponíveis:", ", ".join(nomes_usuarios))
+nome_usuario = input("Digite o nome do usuário para ver as recomendações: ")
+usuario_id = nomes_usuarios.index(nome_usuario)  # Obtém o índice do usuário selecionado.
+
+# Gera e exibe as recomendações de amizade.
+recomendacoes = recomendar_amigos_lista(lista_adj, usuario_id)
+nomes_recomendados = [nomes_usuarios[i] for i in recomendacoes]
+print("Recomendações de amizade para {}: {}".format(nome_usuario, ", ".join(nomes_recomendados)))
+
+# Desenha o grafo com as recomendações.
+desenhar_recomendacoes_lista(lista_adj, usuario_id, recomendacoes, nomes_usuarios)
