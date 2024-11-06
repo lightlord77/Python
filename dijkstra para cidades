@@ -1,0 +1,94 @@
+import sys
+import networkx as nx
+import matplotlib.pyplot as plt
+
+# Definindo a variável para representar "infinito"
+INF = float('inf')
+
+# Função que implementa o algoritmo de Dijkstra para encontrar o menor caminho
+def dijkstra(ini, fin, grafo, desig):
+    num_vert = len(grafo)  # Número de vértices no grafo
+    
+    L = [INF] * num_vert  # Inicializa a lista de distâncias com infinito
+    L[ini] = 0  # Distância para o vértice inicial é 0
+    
+    solv = [False] * num_vert  # Vértices resolvidos (False indica que não está resolvido)
+    prev = [None] * num_vert  # Armazena o caminho
+
+    for _ in range(num_vert):
+        # Encontra o vértice não resolvido com a menor distância L
+        LMin = INF
+        for i in range(num_vert):
+            if not solv[i] and L[i] < LMin:
+                LMin = L[i]
+                u = i
+
+        solv[u] = True  # Marca o vértice u como resolvido
+
+        # Atualiza as distâncias para os vizinhos de u
+        for vizinho in range(num_vert):
+            peso = grafo[u][vizinho]
+            if not solv[vizinho] and peso != INF and L[u] + peso < L[vizinho]:
+                L[vizinho] = L[u] + peso
+                prev[vizinho] = u
+
+    # Reconstrói o caminho do destino até a origem
+    caminho = []
+    i = fin
+    while i is not None:
+        caminho.insert(0, i)  # Insere o vértice no início da lista do caminho
+        i = prev[i]
+
+    return caminho, L[fin]  # Retorna o caminho e a distância mínima para o destino
+
+# Função principal para executar o programa
+cidades = ['Aurora', 'Bonito', 'Carmo' ,'Douras' ,'Estela', 'Felice' ,'Gema', 'Herval', 'Ipiaú' ,'Jaburu' ,'Lindoa' ,'Mundaú']  # Designações dos vértices
+
+# Define a matriz de adjacência com os pesos das arestas
+MA = [
+    [0, 25, INF, 20, 33, INF, INF, INF, INF, INF, INF, INF],  # Aurora
+    [25, 0, 32, INF, INF, 36, INF, INF, INF, INF, INF, INF],  # Bonito
+    [INF, 32, 0, INF, INF, 36, 22, INF, INF, INF, INF, INF],  # Carmo
+    [20, INF, INF, 0, INF, INF, 42, 34, INF, INF, INF, INF],  # Douras
+    [33, INF, INF, INF, 0, INF, INF, 30, 28, INF, INF, INF],  # Estela
+    [INF, 36, 36, INF, INF, 0, INF, INF, INF, 25, INF, INF],  # Felice
+    [INF, INF, 22, INF, INF, INF, 0, INF, INF, 40, 60, INF],  # Gema
+    [INF, INF, INF, 34, 30, INF, INF, 0, INF, 45, 45, 55],    # Herval
+    [INF, INF, INF, INF, 28, INF, INF, INF, 0, INF, 40, 60],  # Ipiaú
+    [INF, INF, INF, INF, INF, 25, 50, 45, INF, 0, INF, INF],  # Jaburu
+    [INF, INF, INF, INF, INF, INF, 30, 45, 40, INF, 0, INF],  # Lindoa
+    [INF, INF, INF, INF, INF, INF, INF, 55, 60, INF, INF, 0]   # Mundaú
+]  # Matriz de adjacência que representa o grafo
+
+print("Cidades disponíveis:", ", ".join(cidades))
+nome_cidadeo = input("Digite o nome da cidade de origem para a recomendação de rota: ")
+# Obtém o índice do usuário selecionado.
+orig = cidades.index(nome_cidadeo)  # Define o vértice inicial ('Aurora')
+
+print("Cidades disponíveis:", ", ".join(cidades))
+nome_cidadef = input("Digite o nome da cidade de destino final para a recomendação de rota: ")
+destf = cidades.index(nome_cidadef)
+
+# Imprime informações sobre o vértice inicial e final
+print("\nVértice inicial: " + cidades[orig])  # Exibe o vértice inicial
+print("Vértice final: " + cidades[destf])  # Exibe o vértice final
+
+# Executa o algoritmo de Dijkstra e exibe o menor caminho e o seu custo
+caminho, Comp = dijkstra(orig, destf, MA, cidades)  # Substitua 'LA' por 'MA'
+print("Menor caminho de %s até %s: %-13s\nValor: %3d" %
+      (cidades[orig], cidades[destf], " > ".join(cidades[v] for v in caminho), Comp))
+
+CompTot = Comp
+
+# Exibe outros caminhos para diferentes destinos a partir do vértice inicial
+print("\n--------------------------")
+print("Outros destinos")
+print("--------------------------")
+print("Dest. | Caminho Custo")
+print("--------------------------")
+
+# Laço para encontrar e exibir o menor caminho para todos os vértices
+for dest in range(len(MA)):  # Percorre todos os destinos
+    if orig != dest:  # Ignora o vértice de origem
+        caminho, custo = dijkstra(orig, dest, MA, cidades)  # Substitua 'LA' por 'MA'
+        print(f"{cidades[dest]} | {' > '.join(cidades[v] for v in caminho)}  {custo}")
