@@ -1,0 +1,162 @@
+import sys
+import networkx as nx
+import matplotlib.pyplot as plt
+
+# Definindo a variável para representar "infinito"
+INF = float('inf')
+
+# Função que implementa o algoritmo de Dijkstra para encontrar o menor caminho
+def dijkstra(ini, fin, grafo, desig):
+    num_vert = len(grafo)  # Número de vértices no grafo
+    
+    L = [INF] * num_vert  # Inicializa a lista de distâncias com infinito
+    L[ini] = 0  # Distância para o vértice inicial é 0
+    
+    solv = [False] * num_vert  # Vértices resolvidos (False indica que não está resolvido)
+    prev = [None] * num_vert  # Armazena o caminho
+
+    for _ in range(num_vert):
+        # Encontra o vértice não resolvido com a menor distância L
+        LMin = INF
+        for i in range(num_vert):
+            if not solv[i] and L[i] < LMin:
+                LMin = L[i]
+                u = i
+
+        solv[u] = True  # Marca o vértice u como resolvido
+
+        # Atualiza as distâncias para os vizinhos de u
+        for vizinho in range(num_vert):
+            peso = grafo[u][vizinho]
+            if not solv[vizinho] and peso != INF and L[u] + peso < L[vizinho]:
+                L[vizinho] = L[u] + peso
+                prev[vizinho] = u
+
+    # Reconstrói o caminho do destino até a origem
+    caminho = []
+    i = fin
+    while i is not None:
+        caminho.insert(0, i)  # Insere o vértice no início da lista do caminho
+        i = prev[i]
+
+    return caminho, L[fin]  # Retorna o caminho e a distância mínima para o destino
+
+def plot_grafos(grafo, caminho, ini, fin, desig, Comp):
+    G = nx.Graph()
+
+    # Adiciona as arestas do grafo original
+    for i in range(len(grafo)):
+        for j in range(len(grafo[i])):
+            if grafo[i][j] > 0 and grafo[i][j] != INF:
+                G.add_edge(i, j, weight=grafo[i][j])
+
+    # Adiciona o menor caminho em um grafo separado
+    G_result = nx.Graph()
+    for k in range(len(caminho) - 1):
+        u, v = caminho[k], caminho[k + 1]
+        G_result.add_edge(u, v, weight=grafo[u][v])
+
+    # Define as posições dos nós
+    pos = nx.spring_layout(G, seed=24)  # Layout organizado
+    plt.figure(figsize=(12, 6))
+
+    # Subplot 1: Grafo Original com arestas cinzas
+    plt.subplot(1, 2, 1)
+    nx.draw_networkx_edges(G, pos, edge_color='black', width=1)
+
+    # Desenha cada nó do grafo original como um retângulo
+    for node in G.nodes:
+        x, y = pos[node]
+        color = 'white' if node not in [ini, fin] else ('lightgreen' if node == ini else 'lightsalmon')
+        plt.annotate(
+            desig[node],
+            xy=(x, y), xycoords='data',
+            ha='center', va='center',
+            bbox=dict(boxstyle="round,pad=0.2", fc=color, ec="black", lw=1),
+            size=7, color="black"
+        )
+    nx.draw_networkx_edge_labels(G, pos, edge_labels={(u, v): d['weight'] for u, v, d in G.edges(data=True)}, font_color='black', rotate=False)
+    plt.title("Grafo Original")
+    plt.gca().set_frame_on(False)
+
+
+    # Subplot 2: Menor Caminho com arestas pretas
+    plt.subplot(1, 2, 2)
+    nx.draw_networkx_edges(G, pos, edge_color='lightgray', width=1)
+
+    # Desenha cada nó do grafo com as cores específicas para o menor caminho
+    for node in G.nodes:
+        x, y = pos[node]
+        color = 'white' if node not in [ini, fin] else ('lightgreen' if node == ini else 'lightsalmon')
+        plt.annotate(
+            desig[node],
+            xy=(x, y), xycoords='data',
+            ha='center', va='center',
+            bbox=dict(boxstyle="round,pad=0.2", fc=color, ec="black", lw=1),
+            size=7, color="black"
+        )
+
+    # Sobrescreve as arestas do menor caminho em preto
+    nx.draw_networkx_edges(G_result, pos, edge_color='black', width=1.5)
+    nx.draw_networkx_edge_labels(G, pos, edge_labels={(u, v): d['weight'] for u, v, d in G.edges(data=True)}, font_color='black', rotate=False)
+
+    # Calcula e exibe o comprimento do caminho
+    comprimento = sum(grafo[caminho[i]][caminho[i + 1]] for i in range(len(caminho) - 1))
+    plt.title(f"Grafo com menor caminho\n (Comprimento: {comprimento})")
+
+    plt.gca().set_frame_on(False)
+
+
+    plt.show()
+
+
+
+
+
+# Função principal para executar o programa
+cidades = ['Aurora', 'Bonito', 'Carmo', 'Douras', 'Estela', 'Felice', 'Gema', 'Herval', 'Ipiaú', 'Jaburu', 'Lindoa', 'Mundaú']  # Designações dos vértices
+
+# Define a matriz de adjacência com os pesos das arestas
+MA = [
+    [0, 25, INF, 20, 33, INF, INF, INF, INF, INF, INF, INF],  # Aurora
+    [25, 0, 32, INF, INF, 36, INF, INF, INF, INF, INF, INF],  # Bonito
+    [INF, 32, 0, INF, INF, 36, 22, INF, INF, INF, INF, INF],  # Carmo
+    [20, INF, INF, 0, INF, INF, 42, 34, INF, INF, INF, INF],  # Douras
+    [33, INF, INF, INF, 0, INF, INF, 30, 28, INF, INF, INF],  # Estela
+    [INF, 36, 36, INF, INF, 0, INF, INF, INF, 25, INF, INF],  # Felice
+    [INF, INF, 22, INF, INF, INF, 0, INF, INF, 40, 60, INF],  # Gema
+    [INF, INF, INF, 34, 30, INF, INF, 0, INF, 45, 45, 55],    # Herval
+    [INF, INF, INF, INF, 28, INF, INF, INF, 0, INF, 40, 60],  # Ipiaú
+    [INF, INF, INF, INF, INF, 25, 50, 45, INF, 0, INF, INF],  # Jaburu
+    [INF, INF, INF, INF, INF, INF, 30, 45, 40, INF, 0, INF],  # Lindoa
+    [INF, INF, INF, INF, INF, INF, INF, 55, 60, INF, INF, 0]   # Mundaú
+]
+
+# Interação com o usuário para definir origem e destino
+print("Cidades disponíveis:", ", ".join(cidades))
+nome_cidadeo = input("Digite o nome da cidade de origem para a recomendação de rota: ")
+orig = cidades.index(nome_cidadeo)  # Obtém o índice da cidade de origem
+
+print("Cidades disponíveis:", ", ".join(cidades))
+nome_cidadef = input("Digite o nome da cidade de destino final para a recomendação de rota: ")
+destf = cidades.index(nome_cidadef)  # Obtém o índice da cidade de destino
+
+# Executa o algoritmo de Dijkstra para encontrar o menor caminho e o seu custo
+caminho, Comp = dijkstra(orig, destf, MA, cidades)
+print("Menor caminho de %s até %s: %s\nValor: %d\n" %
+      (cidades[orig], cidades[destf], " > ".join(cidades[v] for v in caminho), Comp))
+caminho1=caminho
+print("--------------------------")
+print("Outros destinos")
+print("--------------------------")
+print("Destino: Caminho (comprimento)")
+print("--------------------------")
+for dest in range(len(MA)):  # Percorre todos os destinos
+    if orig != dest:  # Ignora o vértice de origem
+        caminho, custo = dijkstra(orig, dest, MA, cidades)  # Executa o algoritmo de Dijkstra para cada destino
+        
+        # Exibe o destino, caminho e custo
+        print(f"{cidades[dest]:<6} : {' > '.join(cidades[v] for v in caminho)} ({custo}).")
+
+
+plot_grafos(MA, caminho1, orig, destf, cidades, Comp)
