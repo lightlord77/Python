@@ -1,0 +1,90 @@
+def caracteres(entrada):
+    # Define caracteres permitidos e verifica a validade da entrada
+    caracteres_inseridos = set("pqr~^v ")
+    for char in entrada:
+        if char not in caracteres_inseridos:
+            return False
+    return any(var in entrada for var in "pqr")  # Confere se ao menos uma variável está presente
+
+def expressao(p, q, r, entrada):
+    valores = {'p': p, 'q': q, 'r': r}
+    operadores = {'^': ' and ', 'v': ' or ', '~': 'not '}
+    expr = ""
+
+    # Substitui variáveis e operadores na expressão
+    for char in entrada.replace(" ", ""):
+        if char in valores:
+            expr += f"({valores[char]})"
+        elif char in operadores:
+            expr += operadores[char]
+        else:
+            expr += char
+
+    try:
+        return eval(expr)  # Avalia a expressão lógica
+    except Exception as e:
+        print(f"Erro ao avaliar a expressão: {expr}. Detalhes: {e}")
+        return None
+
+def print_v_f(valor):
+    return "V" if valor else "F"  # Converte booleano para "V" ou "F"
+
+def tabela_verdade(entrada):
+    x = [True, False]
+
+    # Define variáveis na expressão e configura cabeçalho da tabela
+    if "p" in entrada and "q" in entrada and "r" in entrada:
+        print("\nResultado da tabela verdade:")
+        print(f"| p | q | r | {entrada} |")
+        for i in x:
+            for j in x:
+                for k in x:
+                    resultado = print_v_f(expressao(i, j, k, entrada))
+                    print("|", print_v_f(i), "|", print_v_f(j), "|", print_v_f(k), "|", resultado, "|")
+    elif "p" in entrada and "q" in entrada:
+        print("\nResultado da tabela verdade:")
+        print(f"| p | q | {entrada} |")
+        for i in x:
+            for j in x:
+                resultado = print_v_f(expressao(i, j, None, entrada))
+                print("|", print_v_f(i), "|", print_v_f(j), "|", resultado, "|")
+    elif "p" in entrada and "r" in entrada:
+        print("\nResultado da tabela verdade:")
+        print(f"| p | r | {entrada} |")
+        for i in x:
+            for k in x:
+                resultado = print_v_f(expressao(i, None, k, entrada))
+                print("|", print_v_f(i), "|", print_v_f(k), "|", resultado, "|")
+    elif "q" in entrada and "r" in entrada:
+        print("\nResultado da tabela verdade:")
+        print(f"| q | r | {entrada} |")
+        for j in x:
+            for k in x:
+                resultado = print_v_f(expressao(None, j, k, entrada))
+                print("|", print_v_f(j), "|", print_v_f(k), "|", resultado, "|")
+    elif "p" in entrada:
+        print("\nResultado da tabela verdade:")
+        print(f"| p | {entrada} |")
+        for i in x:
+            resultado = print_v_f(expressao(i, None, None, entrada))
+            print("|", print_v_f(i), "|", resultado, "|")
+    elif "q" in entrada:
+        print("\nResultado da tabela verdade:")
+        print(f"| q | {entrada} |")
+        for j in x:
+            resultado = print_v_f(expressao(None, j, None, entrada))
+            print("|", print_v_f(j), "|", resultado, "|")
+    else:
+        print("\nResultado da tabela verdade:")
+        print(f"| r | {entrada} |")
+        for k in x:
+            resultado = print_v_f(expressao(None, None, k, entrada))
+            print("|", print_v_f(k), "|", resultado, "|")
+
+def inicio():
+    entrada = input("Digite a fórmula... Ex: ~p ^ q v r \n\n-->")
+    while not caracteres(entrada):
+        entrada = input("Fórmula dada não válida. Digite novamente: ")
+    tabela_verdade(entrada)
+
+inicio()
